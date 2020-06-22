@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="com.indus.training.java.exception.StudentPersistException"/>
+<fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="java.io.PrintWriter"/>
+<fullyQualifiedTypeName name="java.io.BufferedWriter"/>
+<fullyQualifiedTypeName name="java.io.FileWriter"/>
+<fullyQualifiedTypeName name="java.io.IOException"/>
+<fullyQualifiedTypeName name="com.indus.training.java.service.impl.LibMngtSysPersistence"/>
+<fullyQualifiedTypeName name="java.io.BufferedReader"/>
+<fullyQualifiedTypeName name="java.io.InputStreamReader"/>
+<fullyQualifiedTypeName name="java.io.Serializable"/>
+<fullyQualifiedTypeName name="com.indus.training.java.exception.StudentSvcException"/>
+<fullyQualifiedTypeName name="com.indus.training.java.service.ILibMngtSysSvcDAO"/>
+<fullyQualifiedTypeName name="com.indus.training.java.service.ILibMngtSysPersistDAO"/>
+<fullyQualifiedTypeName name="java.io.FileReader"/>
+<fullyQualifiedTypeName name="com.indus.training.java.service.impl.LibMngtSysService"/>
+<fullyQualifiedTypeName name="com.indus.training.java.domain.StudentTO"/>
+<fullyQualifiedTypeName name="com.indus.training.java.domain.StudentDO"/>
+<fullyQualifiedTypeName name="java.util.StringTokenizer"/>
+</qualifiedTypeNameHistroy>

@@ -1,0 +1,252 @@
+package com.indus.training.java.service.impl;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+
+import com.indus.training.java.domain.StudentDO;
+import com.indus.training.java.exception.StudentPersistException;
+import com.indus.training.java.service.ILibMngtSysDAO;
+
+public class LibMngtSysDAO implements ILibMngtSysDAO {
+
+	public Boolean register(StudentDO stdDO) throws StudentPersistException {
+		Boolean isStudRegistered = null;
+
+		String studID = stdDO.getStudentID();
+		String ext = "txt";
+		File dir = new File("C:\\IndusTraining\\LearnResources\\LMS");
+		String fileName = String.format("%s.%s", studID, ext);
+		File myFile = new File(dir, fileName);
+
+		isStudRegistered = myFile.exists();
+		return isStudRegistered;
+	}
+
+	public Boolean create(StudentDO stdDO) throws StudentPersistException {
+		Boolean isCreated = null;
+
+		String studID = stdDO.getStudentID();
+		String ext = "txt";
+		File dir = new File("C:\\IndusTraining\\LearnResources\\LMS");
+		String fileName = String.format("%s.%s", studID, ext);
+		File myFile = new File(dir, fileName); // Traverse to this Path
+
+		PrintWriter pw = null;
+		try {
+
+			if (!myFile.exists()) {
+				throw new StudentPersistException("LibMngtSysPersistence : create : Source File with File name  "
+						+ myFile + " does not exists !");
+			}
+			pw = new PrintWriter(new BufferedWriter(new FileWriter(myFile))); // Creates File at 'myFile'
+																				// Path.
+
+			pw.printf("\"%s\",", stdDO.getStudentID());
+			pw.printf("\"%s\",", stdDO.getfName());
+			pw.printf("\"%s\",", stdDO.getlName());
+			pw.printf("\"%s\",", stdDO.getEmail());
+			pw.printf("\"%s\"", stdDO.getContactNo());
+
+			isCreated = myFile.exists();
+			pw.close();
+
+		} catch (IOException e) {
+			throw new StudentPersistException("LibMngtSysPersistence : create : Exception", e);
+		} catch (Exception e) {
+			throw new StudentPersistException("LibMngtSysPersistence : create : Exception", e);
+		}
+
+		finally {
+			try {
+				if (pw != null) {
+					pw.close();
+				}
+				myFile = null;
+
+			} catch (Exception e) {
+				throw new StudentPersistException("LibMngtSysPersistence : register : Unable to close File Stream", e);
+			}
+		}
+
+		return isCreated;
+	}
+
+	public StudentDO search(StudentDO stdDO) throws StudentPersistException {
+		String studID = stdDO.getStudentID();
+		String ext = "txt";
+		File dir = new File("C:\\IndusTraining\\LearnResources\\LMS");
+		String fileName = String.format("%s.%s", studID, ext);
+		File myFile = new File(dir, fileName); // Traverse to this Path
+
+		if (!myFile.exists()) {
+			throw new StudentPersistException(
+					"LibMngtSysPersistence : register : Source File with File name  " + myFile + " does not exists !");
+		}
+
+		Boolean isExists = myFile.exists();
+
+		if (isExists == false) {
+			System.out.println("\nStudent ID doesn't exist.");
+		}
+
+		else {
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(myFile));
+				String r;
+
+				while ((r = br.readLine()) != null)
+					System.out.println(r);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return stdDO;
+	}
+
+	public StudentDO search(String stdDO) throws StudentPersistException {
+
+		String ext = "txt";
+		File dir = new File("C:\\IndusTraining\\LearnResources\\LMS");
+		String fileName = String.format("%s.%s", stdDO, ext);
+		File myFile = new File(dir, fileName); // Traverse to this Path
+
+		StudentDO stuDO = new StudentDO();
+
+		if (!myFile.exists()) {
+			throw new StudentPersistException(
+					"LibMngtSysPersistence : register : Source File with File name  " + myFile + " does not exists !");
+		}
+
+		Boolean isExists = myFile.exists();
+
+		if (isExists == false) {
+			System.out.println("\nStudent ID doesn't exist.");
+		}
+
+		else {
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(myFile));
+				String dataFromFile;
+				while ((dataFromFile = br.readLine()) != null) {
+
+					StringTokenizer strTokenizer = new StringTokenizer(dataFromFile, ",");
+					while (strTokenizer.hasMoreElements()) {
+						stuDO.setStudentID(strTokenizer.nextElement().toString());
+						stuDO.setfName(strTokenizer.nextElement().toString());
+						stuDO.setlName(strTokenizer.nextElement().toString());
+						stuDO.setEmail(strTokenizer.nextElement().toString());
+						stuDO.setContactNo(strTokenizer.nextElement().toString());
+
+					}
+
+				}
+
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return stuDO;
+
+	}
+
+	public Boolean update(StudentDO stdDO) throws StudentPersistException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		Boolean isUpdated = null;
+		Boolean isExists = null;
+
+		String studID = stdDO.getStudentID();
+		String ext = "txt";
+		File dir = new File("C:\\IndusTraining\\LearnResources\\LMS");
+		String fileName = String.format("%s.%s", studID, ext);
+		File myFile = new File(dir, fileName);
+
+		if (!myFile.exists()) {
+			throw new StudentPersistException(
+					"LibMngtSysPersistence : register : Source File with File name  " + myFile + " does not exists !");
+		}
+
+		isExists = myFile.exists();
+
+		if (isExists == false) {
+			System.out.println("\nStudent ID doesn't exist.");
+			isUpdated = false;
+		} else {
+			System.out.println("\nEnter the details you want to update: ");
+
+			try {
+				System.out.println("\nEnter First Name: ");
+				String fName = br.readLine();
+				System.out.println("\nEnter Last Name: ");
+				String lName = br.readLine();
+				System.out.println("\nEnter Email: ");
+				String email = br.readLine();
+				System.out.println("\nEnter Contact Number: ");
+				String contactNo = br.readLine();
+
+				PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(myFile))); // Creates File at
+																								// 'myFile' Path.
+
+				pw.printf("\"%s\",", studID);
+				pw.printf("\"%s\",", fName);
+				pw.printf("\"%s\",", lName);
+				pw.printf("\"%s\",", email);
+				pw.printf("\"%s\"", contactNo);
+
+				isUpdated = myFile.exists();
+				pw.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return isUpdated;
+	}
+
+	public Boolean delete(StudentDO stdDO) throws StudentPersistException {
+		Boolean isDeleted = null;
+		Boolean isExists = null;
+
+		String studID = stdDO.getStudentID();
+		String ext = "txt";
+		File dir = new File("C:\\IndusTraining\\LearnResources\\LMS");
+		String fileName = String.format("%s.%s", studID, ext);
+		File myFile = new File(dir, fileName);
+
+		if (!myFile.exists()) {
+			throw new StudentPersistException(
+					"LibMngtSysPersistence : register : Source File with File name  " + myFile + " does not exists !");
+		}
+
+		isExists = myFile.exists(); // First we will check whether such file exists before deleting
+
+		if (isExists == false) {
+			// System.out.println("\nStudent ID doesn't exist.");
+			isDeleted = true;
+		} else {
+			myFile.delete(); // Delete the file
+			isDeleted = myFile.exists(); // Check whether the file is deleted: If deleted, then isDeleted = false
+		}
+
+		return isDeleted;
+	}
+
+}

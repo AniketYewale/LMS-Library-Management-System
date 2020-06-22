@@ -1,0 +1,152 @@
+/* Library Management System (LMS) using File Handling 3-Tier Java Application*/
+
+package com.indus.training.java.service;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
+import com.indus.training.java.domain.StudentTO;
+import com.indus.training.java.exception.StudentSvcException;
+import com.indus.training.java.service.impl.LibMngtSysSvc;
+
+public class LMS_UI_Main {
+
+	public static void main(String[] args) 
+	{
+		// TODO Auto-generated method stub
+
+		ILibMngtSysSvc iLibMngtSysSvcDAOObj = new LibMngtSysSvc();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		Scanner sc = new Scanner(System.in);
+		char ch;
+	  try {
+			
+		 do {
+			 System.out.println("\nWelcome to Library Management System");
+			 System.out.println("\nWhat would you like to do? ");
+			 System.out.println("1. Register & Create Record in LMS");
+			 System.out.println("2. Search Record");
+			 System.out.println("3. Update Record");
+			 System.out.println("4. Delete Record");
+
+			 System.out.println("\nEnter your choice: ");
+			 int choice = sc.nextInt();
+
+			 switch (choice) 
+			 {
+			 case 1:
+				 	System.out.println("\nEnter Student ID you would like to register in LMS : ");
+				 	String studID = br.readLine();
+				 
+				 	StudentTO stdTOObj = new StudentTO(studID, null, null, null, null);
+
+					Boolean isStudRegistered = null;
+					isStudRegistered = iLibMngtSysSvcDAOObj.enroll(stdTOObj);
+
+					if (isStudRegistered == true) 
+					{
+					  System.out.println("\nStudent ID already exists!");
+					  System.out.println("Try registering using another Student ID.");
+					} 
+					else 
+					{
+					  System.out.println("\nChecking availability of this Student ID...");
+					  System.out.println("Student ID Available! Registering student with this Student ID...");
+					  System.out.println("Student with Student ID " + stdTOObj.getStudentID() + " registered successfully.");
+
+					  System.out.println("\nEnter First Name: ");
+					  String fName = br.readLine();
+					  System.out.println("\nEnter Last Name: ");
+					  String lName = br.readLine();
+					  System.out.println("\nEnter Email: ");
+					  String email = br.readLine();
+					  System.out.println("\nEnter Contact Number: ");
+					  String contactNo = br.readLine();
+
+					  stdTOObj = new StudentTO(studID, fName, lName, email, contactNo);
+					  Boolean isCreated = null;
+					  isCreated = iLibMngtSysSvcDAOObj.persist(stdTOObj);
+
+					  if (isCreated == true) 
+					  {
+						System.out.println("\nFile with Student ID " + stdTOObj.getStudentID() + " created successfully.");
+						System.out.println("\nStudent record with Student ID " + stdTOObj.getStudentID()+ " added successfully.");
+					  } 
+					  else 
+					  {
+						System.out.println("\nFile not created.");
+					  }
+					}
+				break;
+
+			 case 2:
+				 	System.out.println("\nEnter the StudentID you want to Search: ");
+				 	String searchstudID = br.readLine();
+				 	StudentTO searchStudentTOObj = new StudentTO();
+				 	searchStudentTOObj = iLibMngtSysSvcDAOObj.fetch(searchstudID);
+				 	System.out.println("Student ID: "+searchStudentTOObj.getStudentID());
+				 	System.out.println("First Name: "+searchStudentTOObj.getfName());
+				 	System.out.println("Last Name: "+searchStudentTOObj.getlName());
+				 	System.out.println("Email: "+searchStudentTOObj.getEmail());
+				 	System.out.println("Contact Number: "+searchStudentTOObj.getContactNo());
+				 	break;
+		     case 3:
+		    	 	System.out.println("\nEnter the Student ID you want to update: ");
+		    	 	String updatestudID = br.readLine();
+		    	 	StudentTO updStudentTOObj = new StudentTO(updatestudID, null, null, null, null);
+		    	 	
+		    	 	Boolean isUpdated = null;
+		    	 	isUpdated = iLibMngtSysSvcDAOObj.modify(updStudentTOObj);
+		    	 	
+		    	 	if(isUpdated == true)
+		    		{
+		    			System.out.println("Record of Student ID "+updatestudID+" updated successfully.");
+		    		}
+		    		else
+		    		{
+		    			System.out.println("Record of Student ID "+updatestudID+" doesn't exists or not updated.");
+		    		}
+					break;
+					
+		     case 4:
+		    	 	System.out.println("\nEnter the Student ID you want to delete: ");
+		    	 	String delstudID = br.readLine();
+		    	 	StudentTO delStudentTOObj = new StudentTO(delstudID, null, null, null, null);
+		    	 	
+		    	 	Boolean isDeleted = null;
+		    	 	isDeleted = iLibMngtSysSvcDAOObj.unregister(delStudentTOObj);
+		    	 	
+		    	 	if(isDeleted == false)
+		    		{
+		    			System.out.println("Record of Student ID "+delstudID+" deleted successfully.");
+		    		}
+		    		else
+		    		{
+		    			System.out.println("Record of Student ID "+delstudID+" doesn't exists or not deleted.");
+		    		}
+					break;
+					
+		     default:
+				 	System.out.println("\nWrong Choice \n ");
+				 	break;
+		    }
+
+			System.out.println("\nDo you want to continue (Type Y or N) : ");
+			ch = sc.next().charAt(0);
+		 } while (ch == 'Y' || ch == 'y');
+
+			br.close();
+
+	   } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (StudentSvcException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.exit(0);
+	}
+
+}
